@@ -1,0 +1,225 @@
+package tictactoe;
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        // write your code here
+        int round = 1;
+        Printing.printGame(Reading.readInitial());
+        do {
+            switch (round) {
+                case 1:
+                    Printing.printGame(Reading.readFromPlayerX());
+                    round = 2;
+                    break;
+                case 2:
+                    Printing.printGame(Reading.readFromPlayerO());
+                    round = 1;
+                    break;
+            }
+        } while (!Game.finished(Reading.inputMoves)
+                && Game.checkWinner(Reading.inputMoves).equals(""));
+        Printing.printResult(Result.getResult());
+    }
+}
+
+class Reading {
+    static char[][] inputMoves = new char[3][3];
+    static char[][] readInitial() {
+        for (int i = 0; i <= 2; i++) {
+            for (int k = 0; k <= 2; k++) {
+                inputMoves[i][k] = '_';
+            }
+        }
+        return inputMoves;
+    }
+
+    static char[][] readFromPlayerX() {
+        Scanner scanner = new Scanner(System.in);
+        char charX; char charY; int x; int y;
+        do {
+            System.out.print("Enter the coordinates: ");
+            String input = scanner.nextLine();
+            charX = input.charAt(2);
+            charY = input.charAt(0);
+            if (charX < 48 || charX > 57 || charY < 48 || charY > 57) {
+                System.out.println("You should enter numbers!");
+                continue;
+            } else if (charX > 51 || charY > 51) {
+                System.out.println("Coordinates should be from 1 to 3!");
+                continue;
+            }
+            x = getCoordinates(charX, charY)[0];
+            y = getCoordinates(charX, charY)[1];
+            if (inputMoves[x][y] != '_') {
+                System.out.println("This cell is occupied! Choose another one!");
+            } else {
+                break;
+            }
+        } while (true);
+        inputMoves[x][y] = 'X';
+        return inputMoves;
+    }
+    static char[][] readFromPlayerO() {
+        Scanner scanner = new Scanner(System.in);
+        char charX; char charY; int x; int y;
+        do {
+            System.out.print("Enter the coordinates: ");
+            String input = scanner.nextLine();
+            charX = input.charAt(2);
+            charY = input.charAt(0);
+            if (charX < 48 || charX > 57 || charY < 48 || charY > 57) {
+                System.out.println("You should enter numbers!");
+                continue;
+            } else if (charX > 51 || charY > 51) {
+                System.out.println("Coordinates should be from 1 to 3!");
+                continue;
+            }
+            x = getCoordinates(charX, charY)[0];
+            y = getCoordinates(charX, charY)[1];
+            if (inputMoves[x][y] != '_') {
+                System.out.println("This cell is occupied! Choose another one!");
+            } else {
+                break;
+            }
+        } while (true);
+        inputMoves[x][y] = 'O';
+        return inputMoves;
+    }
+
+    static int[] getCoordinates(char x, char y) {
+        int[] position = new int[2];
+        switch (x) {
+            case '3':
+                position[0] = 0;
+                break;
+            case '2':
+                position[0] = 1;
+                break;
+            case '1':
+                position[0] = 2;
+                break;
+            default:
+                System.out.println("error");
+        }
+        switch (y) {
+            case '3':
+                position[1] = 2;
+                break;
+            case '2':
+                position[1] = 1;
+                break;
+            case '1':
+                position[1] = 0;
+                break;
+        }
+        return position;
+    }
+}
+
+class Printing {
+    static void printGame(char[][] inputMoves) {
+        System.out.println("---------");
+        for (int i = 0; i <= 2; i++) {
+            System.out.print("| ");
+            for (int k = 0; k <= 2; k++) {
+                System.out.print(inputMoves[i][k] + " ");
+            }
+            System.out.println("|");
+        }
+        System.out.println("---------");
+    }
+
+    static void printResult(String result) {
+        System.out.println(Result.getResult());
+    }
+}
+
+class Game {
+
+    static String checkWinner(char[][] inputMoves) {
+        String winner = "";
+        for (int i = 0; i <= 2; i++) {
+            if (inputMoves[i][0]+inputMoves[i][1]+inputMoves[i][2] == 264) {
+                winner = winner.concat("X");
+            }
+            if (inputMoves[i][0]+inputMoves[i][1]+inputMoves[i][2] == 237) {
+                winner = winner.concat("O");
+            }
+        }
+        for (int i = 0; i <= 2; i++) {
+            if (inputMoves[0][i]+inputMoves[1][i]+inputMoves[2][i] == 264) {
+                winner = winner.concat("X");
+            }
+            if (inputMoves[0][i]+inputMoves[1][i]+inputMoves[2][i] == 237) {
+                winner = winner.concat("O");
+            }
+        }
+        if (inputMoves[0][0]+inputMoves[1][1]+inputMoves[2][2] == 264
+            || inputMoves[2][0]+inputMoves[1][1]+inputMoves[0][2] == 264) {
+            winner = winner.concat("X");
+        }
+        if (inputMoves[0][0]+inputMoves[1][1]+inputMoves[2][2] == 237
+            || inputMoves[2][0]+inputMoves[1][1]+inputMoves[0][2] == 237) {
+            winner = winner.concat("O");
+        }
+        return winner;
+    }
+
+    static boolean finished(char[][] inputMoves) {
+        for (int i = 0; i <= 2; i++) {
+            for (int k = 0; k <= 2; k++) {
+                if (inputMoves[i][k] == '_') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    static int countX(char[][] inputMoves) {
+        int countX = 0;
+        for (int i = 0; i <= 2; i++) {
+            for (int k = 0; k <= 2; k++) {
+                if (inputMoves[i][k] == 'X') {
+                    countX++;
+                }
+            }
+        }
+        return countX;
+    }
+
+    static int countO(char[][] inputMoves) {
+        int countO = 0;
+        for (int i = 0; i <= 2; i++) {
+            for (int k = 0; k <= 2; k++) {
+                if (inputMoves[i][k] == 'O') {
+                    countO++;
+                }
+            }
+        }
+        return countO;
+    }
+}
+
+class Result extends Game {
+
+    static String getResult() {
+        String winner = checkWinner(Reading.inputMoves);
+        boolean finished = finished(Reading.inputMoves);
+        int countDiff = countX(Reading.inputMoves)-countO(Reading.inputMoves);
+        if (winner.length()>1 || Math.abs(countDiff) >= 2) {
+            return("Impossible");
+        } else if (winner.equals("") && !finished) {
+            return("Game not finished");
+        } else if (winner.equals("X")) {
+            return("X wins");
+        } else if (winner.equals("O")) {
+            return("O wins");
+        } else if (winner.equals("") && Math.abs(countDiff) < 2) {
+            return("Draw");
+        } return null;
+    }
+}
+
